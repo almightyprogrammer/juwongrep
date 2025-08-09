@@ -1,16 +1,29 @@
 use std::env;
 use std::fs;
 
-fn main() {
-    let args: Vec<string> = env::args().collect();
+struct Config {
+    query: String,
+    file_path: String,
+}
 
-    let (query, file_path) = read_configs(&args);
+fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let config = read_configs(&args);
+
+    println!("Searching for {}", config.query);
+    println!("Searching for {}", config.file_path);
+
+    let contents = fs::read_to_string(config.file_path)
+        .expect("Should have been able to read the file...");
+
+    println!("{contents}");
 }
 
 
-fn read_configs(args: &[String]) -> (&str, &str) {
-    let query = &args[1];
-    let file_path = %args[2];
+fn read_configs(args: &[String]) -> Config {
+    let query = args[1].clone();
+    let file_path = args[2].clone();
 
-    (query, file_path);
+    Config { query, file_path }
 }
